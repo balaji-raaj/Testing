@@ -96,29 +96,17 @@ export class BcpChartComponent implements OnInit {
     }
 
     getBcpDetailsUpdateData(projectId) {
-        this.bcpChartService.getBCPDataTrackerHistory(projectId).subscribe(data => {
-            this.bcpAssociateTrackerService.getBcpAssociateTracker(projectId).subscribe(model => {
+        this.bcpChartService.BcpAssociateTracker(projectId).subscribe(MasterData => {
+            this.bcpAssociateTrackerService.getBCPDataTrackerHistoryget(projectId).subscribe(model => {
                 let chartData = [];
-                data.bcpDetailsUpdate.forEach(bcpDetails => {
-                    var bcpModelDetails = model.userDetail.filter(x => x.AssociateId == bcpDetails.AssociateID);
-                    var modelDetails = bcpModelDetails.map(userDetails => ({
-                        AccountID: userDetails.AccountID,
-                        AccountName: userDetails.AccountName,
-                        AssociateID: userDetails.AssociateId,
-                        AssociateName: userDetails.AssociateName,
-                        CurrentEnabledforWFH: bcpDetails.CurrentEnabledforWFH,
-                        WFHDeviceType: bcpDetails.WFHDeviceType,
-                        Comments: bcpDetails.Comments,
-                        PersonalReason: bcpDetails.PersonalReason,
-                        AssetId: bcpDetails.AssetId,
-                        PIIDataAccess: bcpDetails.PIIDataAccess,
-                        Protocol: bcpDetails.Protocol,
-                        BYODCompliance: bcpDetails.BYODCompliance,
-                        Dongles: bcpDetails.Dongles,
-                        UpdateDate: bcpDetails.UpdateDate,
-                        UniqueId: bcpDetails.UniqueId
-                    }));
-                    chartData.push(modelDetails);
+                model.forEach(trackerdetail => {
+                    var data = MasterData.find(x=>x.AssociateId === trackerdetail.AssociateId);
+                    chartData.push({
+                        AccountID: data.AccountID,
+                        AccountName: data.AccountName,
+                        AssociateID: data.AssociateId,
+                        AssociateName: data.AssociateName
+                    });
                 });
                 console.log(chartData);
                 this.getChartData(chartData);
